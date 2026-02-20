@@ -2,40 +2,69 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Politie Academie | Actief Schrijven</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politie Academie | Actief Schrijven Trainer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --police-blue: #003366; }
-        body { background: #f0f4f8; font-family: sans-serif; }
+        body { background: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+        .police-card { border-top: 8px solid var(--police-blue); }
+        .logo-img { height: 50px; width: auto; object-fit: contain; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="max-w-2xl w-full bg-white shadow-2xl rounded-xl overflow-hidden" style="border-top: 8px solid #003366;">
+    <div class="max-w-2xl w-full bg-white shadow-2xl rounded-xl overflow-hidden police-card">
         <div class="bg-[#003366] p-6 text-white flex justify-between items-center">
-            <h1 class="text-xl font-bold italic uppercase">Dossier: Dapperstraat</h1>
-            <span id="counter" class="text-2xl font-black text-yellow-400">1 / 25</span>
+            <div class="flex items-center gap-4">
+                <img src="200w.gif">
+                <div>
+                    <h1 class="text-xl font-black italic tracking-tighter uppercase leading-none">Q2 PV Bevindingen les 2: Onvoltooid Verleden Tijd</h1>
+                    <p class="text-[10px] uppercase tracking-widest text-blue-200 font-bold mt-1">Passief naar Actief</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span id="counter" class="text-2xl font-black text-yellow-400">1 / 25</span>
+            </div>
+        </div>
+
+        <div class="w-full bg-gray-200 h-2">
+            <div id="progress" class="bg-yellow-500 h-2 transition-all duration-500" style="width: 4%"></div>
         </div>
 
         <div class="p-8">
-            <p class="text-[10px] font-bold uppercase text-gray-400 mb-1">Passief (Fout):</p>
-            <div id="passive-sentence" class="text-lg font-bold text-gray-700 italic bg-gray-50 p-4 border-l-4 border-gray-200 mb-6">
-                Klik op start om te beginnen...
+            <div id="exercise-box">
+                <div class="mb-6">
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Passieve formulering (Fout):</p>
+                    <div id="passive-sentence" class="text-lg font-bold text-slate-700 italic border-l-4 border-slate-200 pl-4 py-2 bg-slate-50 uppercase tracking-tight">
+                        </div>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst (Verleden Tijd):</p>
+                    <input type="text" id="userInput" 
+                           class="w-full p-4 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-900 text-lg"
+                           placeholder="Begin met 'Ik'..."
+                           autocomplete="off">
+                </div>
+
+                <div id="feedback" class="hidden mb-6 p-4 rounded-lg text-sm font-bold border-l-4"></div>
+
+                <button onclick="checkAnswer()" class="w-full bg-[#003366] text-white py-4 rounded-lg font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">
+                    Mutatie Bevestigen
+                </button>
             </div>
 
-            <input type="text" id="userInput" class="w-full p-4 border-2 border-gray-200 rounded-lg mb-4 outline-none focus:border-blue-900" placeholder="Begin met 'Ik'...">
-            
-            <div id="feedback" class="hidden p-4 rounded mb-4 font-bold"></div>
-
-            <button onclick="checkAnswer()" class="w-full bg-[#003366] text-white py-4 rounded font-bold uppercase tracking-widest">
-                Bevestig mutatie
-            </button>
+            <div id="final-screen" class="hidden text-center py-10">
+                <h2 class="text-3xl font-black text-blue-900 mb-2 text-center uppercase">Dossier Afgerond</h2>
+                <p class="text-slate-600 mb-6">U schrijft nu actief en professioneel.</p>
+                <button onclick="location.reload()" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold uppercase">Herstart</button>
+            </div>
         </div>
     </div>
 
 <script>
-    // De zinnen-database
-    const q = [
+    const questions = [
         { p: "De verdachte werd door mij staande gehouden.", c: "Ik hield de verdachte staande" },
         { p: "Door mij werd een bloedspoor op de Dapperstraat gezien.", c: "Ik zag een bloedspoor op de Dapperstraat" },
         { p: "De grijze Volkswagen Golf werd door mij aangetroffen.", c: "Ik trof de grijze volkswagen golf aan" },
@@ -63,41 +92,43 @@
         { p: "De situatie werd door mij bevroren.", c: "Ik bevroor de situatie" }
     ];
 
-    let index = 0;
+    let current = 0;
 
-    function show() {
-        if(index < q.length) {
-            document.getElementById('passive-sentence').innerText = q[index].p;
-            document.getElementById('counter').innerText = (index + 1) + " / 25";
+    function init() {
+        if (current < questions.length) {
+            document.getElementById('passive-sentence').innerText = questions[current].p;
+            document.getElementById('counter').innerText = (current + 1) + " / 25";
+            document.getElementById('progress').style.width = ((current + 1) / questions.length * 100) + "%";
             document.getElementById('userInput').value = "";
             document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('userInput').focus();
         } else {
-            alert("Training voltooid!");
-            location.reload();
+            document.getElementById('exercise-box').classList.add('hidden');
+            document.getElementById('final-screen').classList.remove('hidden');
         }
     }
 
     window.checkAnswer = function() {
-        let val = document.getElementById('userInput').value.toLowerCase().trim();
-        let correct = q[index].c.toLowerCase();
-        let f = document.getElementById('feedback');
-        
-        // Check of het antwoord de kern bevat en start met 'ik'
-        if(val.startsWith("ik") && val.includes(correct.split(" ")[1])) {
-            f.innerText = "Correct!";
-            f.className = "p-4 rounded mb-4 font-bold bg-green-100 text-green-800";
-            f.classList.remove('hidden');
-            index++;
-            setTimeout(show, 1000);
+        let input = document.getElementById('userInput').value.trim().toLowerCase();
+        let target = questions[current].c.toLowerCase();
+        let feedback = document.getElementById('feedback');
+
+        // Check of de zin met 'ik' begint en de belangrijkste werkwoordsvorm bevat
+        if (input.startsWith("ik") && input.includes(target.split(" ")[1])) {
+            feedback.innerText = "CORRECT: U schrijft actief.";
+            feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-green-100 text-green-800 border-green-500 block";
+            current++;
+            setTimeout(init, 1000);
         } else {
-            f.innerText = "Fout. Begin met 'Ik' en gebruik de verleden tijd.";
-            f.className = "p-4 rounded mb-4 font-bold bg-red-100 text-red-800";
-            f.classList.remove('hidden');
+            feedback.innerText = "FOUT: Begin met 'Ik' en gebruik de verleden tijd.";
+            feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-red-100 text-red-800 border-red-500 block";
         }
     }
 
-    // Start direct
-    show();
+    document.getElementById('userInput').addEventListener("keypress", e => { if(e.key === 'Enter') checkAnswer(); });
+    
+    // Start de oefening zodra de pagina geladen is
+    window.onload = init;
 </script>
 </body>
 </html>

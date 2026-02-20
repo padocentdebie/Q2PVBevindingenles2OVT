@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Politie Academie | Actief Schrijven Trainer</title>
+    <title>Politie Academie | Redenen van Wetenschap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --police-blue: #003366; }
         body { background: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
         .police-card { border-top: 8px solid var(--police-blue); }
-        .logo-img { height: 50px; width: auto; object-fit: contain; }
+        .logo-img { height: 55px; width: auto; object-fit: contain; }
+        textarea { resize: none; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -17,10 +18,10 @@
     <div class="max-w-2xl w-full bg-white shadow-2xl rounded-xl overflow-hidden police-card">
         <div class="bg-[#003366] p-6 text-white flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <img src="200w.gif">
+                <img src="200w.gif" alt="Politie Logo" class="logo-img">
                 <div>
-                    <h1 class="text-xl font-black italic tracking-tighter uppercase leading-none">Q2 PV Bevindingen les 2: Onvoltooid Verleden Tijd</h1>
-                    <p class="text-[10px] uppercase tracking-widest text-blue-200 font-bold mt-1">Passief naar Actief</p>
+                    <h1 class="text-xl font-black italic uppercase leading-none tracking-tighter">PV-Training: Redenen van Wetenschap</h1>
+                    <p class="text-[10px] uppercase tracking-widest text-blue-200 font-bold mt-1">Locatie: Dapperstraat, Amsterdam</p>
                 </div>
             </div>
             <div class="text-right">
@@ -37,59 +38,62 @@
                 <div class="mb-6">
                     <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Passieve formulering (Fout):</p>
                     <div id="passive-sentence" class="text-lg font-bold text-slate-700 italic border-l-4 border-slate-200 pl-4 py-2 bg-slate-50 uppercase tracking-tight">
-                        </div>
+                        Laden van dossier...
+                    </div>
                 </div>
 
                 <div class="mb-6">
-                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst (Verleden Tijd):</p>
-                    <input type="text" id="userInput" 
-                           class="w-full p-4 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-900 text-lg"
-                           placeholder="Begin met 'Ik'..."
-                           autocomplete="off">
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst (Gebruik: "Ik [werkwoord] dat..."):</p>
+                    <textarea id="userInput" rows="3"
+                           class="w-full p-4 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-900 text-lg transition-all"
+                           placeholder="Bijv: Ik zag dat er een bloedspoor op de Dapperstraat lag..."
+                           autocomplete="off"></textarea>
                 </div>
 
                 <div id="feedback" class="hidden mb-6 p-4 rounded-lg text-sm font-bold border-l-4"></div>
 
                 <button onclick="checkAnswer()" class="w-full bg-[#003366] text-white py-4 rounded-lg font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">
-                    Mutatie Bevestigen
+                    Vastleggen in PV
                 </button>
             </div>
 
             <div id="final-screen" class="hidden text-center py-10">
-                <h2 class="text-3xl font-black text-blue-900 mb-2 text-center uppercase">Dossier Afgerond</h2>
-                <p class="text-slate-600 mb-6">U schrijft nu actief en professioneel.</p>
-                <button onclick="location.reload()" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold uppercase">Herstart</button>
+                <div class="text-5xl mb-4">📜</div>
+                <h2 class="text-3xl font-black text-blue-900 mb-2 uppercase">Dossier Voltooid</h2>
+                <p class="text-slate-600 mb-6 font-semibold">U hanteert nu consequent de redenen van wetenschap in de verleden tijd.</p>
+                <button onclick="location.reload()" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold uppercase tracking-widest">Opnieuw Trainen</button>
             </div>
         </div>
     </div>
 
 <script>
+    // Database van 25 zinnen met de 'Ik-dat' structuur
     const questions = [
-        { p: "De verdachte werd door mij staande gehouden.", c: "Ik hield de verdachte staande" },
-        { p: "Door mij werd een bloedspoor op de Dapperstraat gezien.", c: "Ik zag een bloedspoor op de Dapperstraat" },
-        { p: "De grijze Volkswagen Golf werd door mij aangetroffen.", c: "Ik trof de grijze volkswagen golf aan" },
-        { p: "De pepperspray werd door mij ter hand genomen.", c: "Ik nam de pepperspray ter hand" },
-        { p: "Door mij werd de identiteit van de getuige vastgesteld.", c: "Ik stelde de identiteit van de getuige vast" },
-        { p: "Een sterke alcohollucht werd door mij waargenomen.", c: "Ik nam een sterke alcohollucht waar" },
-        { p: "De handboeien werden door mij bij de man aangelegd.", c: "Ik legde de handboeien bij de man aan" },
-        { p: "Door mij werd de PD direct afgezet met lint.", c: "Ik zette de pd direct af met lint" },
-        { p: "De portier van de auto werd door mij geopend.", c: "Ik opende de portier van de auto" },
-        { p: "Een huls werd door mij op het wegdek gevonden.", c: "Ik vond een huls op het wegdek" },
-        { p: "De melding werd door mij via de portofoon bevestigd.", c: "Ik bevestigde de melding via de portofoon" },
-        { p: "Door mij werd een beschrijving van de dader genoteerd.", c: "Ik noteerde een beschrijving van de dader" },
-        { p: "De snelheid werd door mij geschat op 80 km/u.", c: "Ik schatte de snelheid op 80 km/u" },
-        { p: "Een glasfragment werd door mij veiliggesteld.", c: "Ik stelde een glasfragment veilig" },
-        { p: "De McDonalds werd door mij doorzocht.", c: "Ik doorzocht de mcdonalds" },
-        { p: "Door mij werd de verdachte naar het bureau vervoerd.", c: "Ik vervoerde de verdachte naar het bureau" },
-        { p: "Mijn legitimatiebewijs werd door mij getoond.", c: "Ik toonde mijn legitimatiebewijs" },
-        { p: "De getuige werd door mij apart genomen.", c: "Ik nam de getuige apart" },
-        { p: "Door mij werd assistentie gevraagd.", c: "Ik vroeg assistentie" },
-        { p: "De remsporen werden door mij opgemeten.", c: "Ik mat de remsporen op" },
-        { p: "Een bekeuring werd door mij uitgereikt.", c: "Ik reikte een bekeuring uit" },
-        { p: "De camerabeelden werden door mij bekeken.", c: "Ik bekeek de camerabeelden" },
-        { p: "Door mij werd de cautie gegeven.", c: "Ik gaf de cautie" },
-        { p: "Het voertuig werd door mij aan de kant gezet.", c: "Ik zette het voertuig aan de kant" },
-        { p: "De situatie werd door mij bevroren.", c: "Ik bevroor de situatie" }
+        { p: "Door mij werd een bloedspoor op de Dapperstraat gezien.", v: "zag" },
+        { p: "De verdachte werd door mij staande gehouden.", v: "hield" },
+        { p: "De grijze Volkswagen Golf werd door mij aangetroffen.", v: "zag" },
+        { p: "De pepperspray werd door mij ter hand genomen.", v: "nam" },
+        { p: "Een sterke alcohollucht werd door mij waargenomen.", v: "nam" },
+        { p: "De handboeien werden door mij bij de man aangelegd.", v: "legde" },
+        { p: "Door mij werd de PD direct afgezet met lint.", v: "zette" },
+        { p: "Een huls werd door mij op het wegdek gevonden.", v: "zag" },
+        { p: "De melding werd door mij via de portofoon bevestigd.", v: "bevestigde" },
+        { p: "De snelheid werd door mij geschat op 80 km/u.", v: "zag" },
+        { p: "De McDonalds werd door mij doorzocht.", v: "doorzocht" },
+        { p: "Door mij werd de verdachte naar het bureau vervoerd.", v: "vervoerde" },
+        { p: "De situatie werd door mij bevroren.", v: "bevroor" },
+        { p: "De getuige werd door mij apart genomen.", v: "nam" },
+        { p: "De camerabeelden werden door mij uitgekeken.", v: "zag" },
+        { p: "De identiteit werd door mij vastgesteld.", v: "stelde" },
+        { p: "De voordeur werd door mij geforceerd.", v: "forceerde" },
+        { p: "Een mes werd door mij onder de stoel gevonden.", v: "zag" },
+        { p: "De cautie werd door mij aan de man gegeven.", v: "gaf" },
+        { p: "De remsporen werden door mij opgemeten.", v: "mat" },
+        { p: "Een bekeuring werd door mij uitgereikt.", v: "reikte" },
+        { p: "De verdachte werd door mij gefouilleerd.", v: "fouilleerde" },
+        { p: "De ruit werd door mij verbrijzeld aangetroffen.", v: "zag" },
+        { p: "De verklaring werd door mij genoteerd.", v: "noteerde" },
+        { p: "De auto werd door mij aan de kant gezet.", v: "zette" }
     ];
 
     let current = 0;
@@ -110,24 +114,39 @@
 
     window.checkAnswer = function() {
         let input = document.getElementById('userInput').value.trim().toLowerCase();
-        let target = questions[current].c.toLowerCase();
+        let q = questions[current];
         let feedback = document.getElementById('feedback');
 
-        // Check of de zin met 'ik' begint en de belangrijkste werkwoordsvorm bevat
-        if (input.startsWith("ik") && input.includes(target.split(" ")[1])) {
-            feedback.innerText = "CORRECT: U schrijft actief.";
-            feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-green-100 text-green-800 border-green-500 block";
+        // Validatie criteria
+        const startsWithIk = input.startsWith("ik");
+        const containsDat = input.includes(" dat ");
+        const containsVerb = input.includes(q.v);
+
+        if (startsWithIk && containsDat && containsVerb) {
+            feedback.innerText = "UITSTEKEND: Juridisch correcte redenen van wetenschap.";
+            feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-green-100 text-green-800 border-green-500 block border-l-4";
+            feedback.classList.remove('hidden');
             current++;
             setTimeout(init, 1000);
         } else {
-            feedback.innerText = "FOUT: Begin met 'Ik' en gebruik de verleden tijd.";
-            feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-red-100 text-red-800 border-red-500 block";
+            let error = "FOUT: ";
+            if (!startsWithIk) error += "Begin met 'Ik'. ";
+            if (!containsDat) error += "Gebruik 'dat' (redenen van wetenschap). ";
+            if (!containsVerb) error += "Gebruik de juiste verleden tijd (bijv. " + q.v + "). ";
+            
+            feedback.innerText = error;
+            feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-red-100 text-red-800 border-red-500 block border-l-4";
+            feedback.classList.remove('hidden');
         }
     }
 
-    document.getElementById('userInput').addEventListener("keypress", e => { if(e.key === 'Enter') checkAnswer(); });
-    
-    // Start de oefening zodra de pagina geladen is
+    document.getElementById('userInput').addEventListener("keypress", e => { 
+        if(e.key === 'Enter') { 
+            e.preventDefault(); 
+            checkAnswer(); 
+        }
+    });
+
     window.onload = init;
 </script>
 </body>

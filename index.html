@@ -46,7 +46,7 @@
                     <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst (Gebruik: "Ik [werkwoord] dat..."):</p>
                     <textarea id="userInput" rows="3"
                            class="w-full p-4 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-900 text-lg transition-all"
-                           placeholder="Bijv: Ik zag dat er een bloedspoor op de Dapperstraat lag..."
+                           placeholder=""
                            autocomplete="off"></textarea>
                 </div>
 
@@ -67,7 +67,6 @@
     </div>
 
 <script>
-    // Database van 25 zinnen met de 'Ik-dat' structuur
     const questions = [
         { p: "Door mij werd een bloedspoor op de Dapperstraat gezien.", v: "zag" },
         { p: "De verdachte werd door mij staande gehouden.", v: "hield" },
@@ -80,7 +79,7 @@
         { p: "De melding werd door mij via de portofoon bevestigd.", v: "bevestigde" },
         { p: "De snelheid werd door mij geschat op 80 km/u.", v: "zag" },
         { p: "De McDonalds werd door mij doorzocht.", v: "doorzocht" },
-        { p: "Door mij werd de verdachte naar het bureau vervoerd.", v: "vervoerde" },
+        { p: "Door mij werd the verdachte naar het bureau vervoerd.", v: "vervoerde" },
         { p: "De situatie werd door mij bevroren.", v: "bevroor" },
         { p: "De getuige werd door mij apart genomen.", v: "nam" },
         { p: "De camerabeelden werden door mij uitgekeken.", v: "zag" },
@@ -117,7 +116,6 @@
         let q = questions[current];
         let feedback = document.getElementById('feedback');
 
-        // Validatie criteria
         const startsWithIk = input.startsWith("ik");
         const containsDat = input.includes(" dat ");
         const containsVerb = input.includes(q.v);
@@ -132,7 +130,7 @@
             let error = "FOUT: ";
             if (!startsWithIk) error += "Begin met 'Ik'. ";
             if (!containsDat) error += "Gebruik 'dat' (redenen van wetenschap). ";
-            if (!containsVerb) error += "Gebruik de juiste verleden tijd (bijv. " + q.v + "). ";
+            if (!containsVerb) error += "Gebruik de juiste actieve verleden tijd. ";
             
             feedback.innerText = error;
             feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-red-100 text-red-800 border-red-500 block border-l-4";

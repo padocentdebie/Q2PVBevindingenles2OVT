@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <p id="instruction-text" class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst (Gebruik: "Ik [werkwoord] dat..."):</p>
+                    <p id="instruction-text" class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst:</p>
                     <textarea id="userInput" rows="3"
                            class="w-full p-4 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-900 text-lg transition-all"
                            placeholder=""
@@ -60,39 +60,40 @@
             <div id="final-screen" class="hidden text-center py-10">
                 <div class="text-5xl mb-4">📜</div>
                 <h2 class="text-3xl font-black text-blue-900 mb-2 uppercase">Dossier Voltooid</h2>
-                <p class="text-slate-600 mb-6 font-semibold">U hanteert nu consequent de redenen van wetenschap in de verleden tijd.</p>
+                <p class="text-slate-600 mb-6 font-semibold">U hanteert nu consequent de actieve verleden tijd en de juiste redenen van wetenschap.</p>
                 <button onclick="location.reload()" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold uppercase tracking-widest">Opnieuw Trainen</button>
             </div>
         </div>
     </div>
 
 <script>
+    // noDat: true betekent dat het een ambtshandeling is waarbij 'dat' niet logisch is.
     const questions = [
-        { p: "Door mij werd een bloedspoor op de Dapperstraat gezien.", v: "zag" },
-        { p: "De verdachte werd door mij staande gehouden.", v: "hield", noDat: true },
-        { p: "De grijze Volkswagen Golf werd door mij aangetroffen.", v: "zag" },
-        { p: "De pepperspray werd door mij ter hand genomen.", v: "nam" },
-        { p: "Een sterke alcohollucht werd door mij waargenomen.", v: "nam" },
-        { p: "De handboeien werden door mij bij de man aangelegd.", v: "legde" },
-        { p: "Door mij werd de PD direct afgezet met lint.", v: "zette" },
-        { p: "Een huls werd door mij op het wegdek gevonden.", v: "zag" },
-        { p: "De melding werd door mij via de portofoon bevestigd.", v: "bevestigde" },
-        { p: "De snelheid werd door mij geschat op 80 km/u.", v: "zag" },
-        { p: "De McDonalds werd door mij doorzocht.", v: "doorzocht" },
-        { p: "Door mij werd the verdachte naar het bureau vervoerd.", v: "vervoerde", noDat: true },
-        { p: "De situatie werd door mij bevroren.", v: "bevroor" },
-        { p: "De getuige werd door mij apart genomen.", v: "nam" },
-        { p: "De camerabeelden werden door mij uitgekeken.", v: "zag" },
-        { p: "De identiteit werd door mij vastgesteld.", v: "stelde" },
-        { p: "De voordeur werd door mij geforceerd.", v: "forceerde" },
-        { p: "Een mes werd door mij onder de stoel gevonden.", v: "zag" },
-        { p: "De cautie werd door mij aan de man gegeven.", v: "gaf" },
-        { p: "De remsporen werden door mij opgemeten.", v: "mat" },
-        { p: "Een bekeuring werd door mij uitgereikt.", v: "reikte" },
-        { p: "De verdachte werd door mij gefouilleerd.", v: "fouilleerde" },
-        { p: "De ruit werd door mij verbrijzeld aangetroffen.", v: "zag" },
-        { p: "De verklaring werd door mij genoteerd.", v: "noteerde" },
-        { p: "De auto werd door mij aan de kant gezet.", v: "zette" }
+        { p: "Door mij werd een plas rode stroperige vloeistof van ongeveer 20 cm breed en 30 cm lang gezien.", v: "zag", needsDat: true },
+        { p: "De verdachte werd door mij staande gehouden.", v: "hield", needsDat: false },
+        { p: "De grijze Volkswagen Golf werd door mij aangetroffen.", v: "zag", needsDat: true },
+        { p: "De pepperspray werd door mij ter hand genomen.", v: "nam", needsDat: false },
+        { p: "Een sterke alcohollucht werd door mij waargenomen.", v: "nam", needsDat: true },
+        { p: "De handboeien werden door mij bij de man aangelegd.", v: "legde", needsDat: false },
+        { p: "Door mij werd de PD direct afgezet met lint.", v: "zette", needsDat: false },
+        { p: "Een huls werd door mij op het wegdek gevonden.", v: "zag", needsDat: true },
+        { p: "De melding werd door mij via de portofoon bevestigd.", v: "bevestigde", needsDat: false },
+        { p: "De snelheid werd door mij geschat op 80 km/u.", v: "zag", needsDat: true },
+        { p: "De McDonalds werd door mij doorzocht.", v: "doorzocht", needsDat: false },
+        { p: "Door mij werd de verdachte naar het bureau vervoerd.", v: "vervoerde", needsDat: false },
+        { p: "De situatie werd door mij bevroren.", v: "bevroor", needsDat: false },
+        { p: "De getuige werd door mij apart genomen.", v: "nam", needsDat: false },
+        { p: "De camerabeelden werden door mij uitgekeken.", v: "zag", needsDat: true },
+        { p: "De identiteit werd door mij vastgesteld.", v: "stelde", needsDat: false },
+        { p: "De voordeur werd door mij geforceerd.", v: "forceerde", needsDat: false },
+        { p: "Een mes werd door mij onder de stoel gevonden.", v: "zag", needsDat: true },
+        { p: "De cautie werd door mij aan de man gegeven.", v: "gaf", needsDat: false },
+        { p: "De remsporen werden door mij opgemeten.", v: "mat", needsDat: false },
+        { p: "Een bekeuring werd door mij uitgereikt.", v: "reikte", needsDat: false },
+        { p: "De verdachte werd door mij gefouilleerd.", v: "fouilleerde", needsDat: false },
+        { p: "De ruit werd door mij verbrijzeld aangetroffen.", v: "zag", needsDat: true },
+        { p: "De verklaring werd door mij genoteerd.", v: "noteerde", needsDat: false },
+        { p: "De auto werd door mij aan de kant gezet.", v: "zette", needsDat: false }
     ];
 
     let current = 0;
@@ -106,11 +107,11 @@
             document.getElementById('userInput').value = "";
             document.getElementById('feedback').classList.add('hidden');
             
-            // Pas instructietekst aan op basis van de noodzaak voor 'dat'
-            if (q.noDat) {
-                document.getElementById('instruction-text').innerText = "Uw actieve PV-tekst (Verleden tijd):";
+            // Pas instructietekst dynamisch aan
+            if (q.needsDat) {
+                document.getElementById('instruction-text').innerText = "Zintuiglijke waarneming (Gebruik: \"Ik [werkwoord] dat...\"):";
             } else {
-                document.getElementById('instruction-text').innerText = "Uw actieve PV-tekst (Gebruik: \"Ik [werkwoord] dat...\"):";
+                document.getElementById('instruction-text').innerText = "Ambtshandeling (Gebruik: Actieve verleden tijd):";
             }
             
             document.getElementById('userInput').focus();
@@ -129,20 +130,25 @@
         const containsDat = input.includes(" dat ");
         const containsVerb = input.includes(q.v);
         
-        // Check of we 'dat' nodig hebben voor deze specifieke vraag
-        const datCheck = q.noDat ? true : containsDat;
+        // Validatie: als needsDat true is, MOET 'dat' erin staan. Als false, dan mag het niet of is het niet nodig.
+        let validationPass = false;
+        if (q.needsDat) {
+            validationPass = startsWithIk && containsDat && containsVerb;
+        } else {
+            validationPass = startsWithIk && containsVerb;
+        }
 
-        if (startsWithIk && datCheck && containsVerb) {
-            feedback.innerText = "UITSTEKEND: Juridisch correcte redenen van wetenschap.";
+        if (validationPass) {
+            feedback.innerText = "UITSTEKEND: Actief en juridisch correct geformuleerd.";
             feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-green-100 text-green-800 border-green-500 block border-l-4";
             feedback.classList.remove('hidden');
             current++;
             setTimeout(init, 1000);
         } else {
             let error = "FOUT: ";
-            if (!startsWithIk) error += "Begin met 'Ik'. ";
-            if (!datCheck) error += "Gebruik 'dat' (redenen van wetenschap). ";
-            if (!containsVerb) error += "Gebruik de juiste actieve verleden tijd. ";
+            if (!startsWithIk) error += "Begin de zin met 'Ik'. ";
+            if (q.needsDat && !containsDat) error += "Dit is een waarneming; gebruik 'Ik [werkwoord] dat...'. ";
+            if (!containsVerb) error += `Gebruik de actieve verleden tijd (bijv. '${q.v}'). `;
             
             feedback.innerText = error;
             feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-red-100 text-red-800 border-red-500 block border-l-4";

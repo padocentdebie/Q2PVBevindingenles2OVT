@@ -38,9 +38,12 @@
         <div class="lg:col-span-3 space-y-4">
             <div class="bg-white shadow-2xl rounded-xl p-4 police-card">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="font-black text-[#003366] uppercase italic italic">Interactief Digibord</h3>
+                    <h3 class="font-black text-[#003366] uppercase italic">Interactief Digibord</h3>
                     <input type="text" id="boardInput" placeholder="Typ een zin en druk op Enter..." class="flex-1 mx-4 p-2 border-2 rounded-lg text-sm outline-none focus:border-blue-900">
-                    <button onclick="clearBoard()" class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase">Wis Bord</button>
+                    <div class="flex gap-2">
+                        <button onclick="clearBoard()" class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold uppercase">Wis Bord</button>
+                        <button onclick="resetScores()" class="bg-orange-500 text-white px-3 py-1 rounded text-xs font-bold uppercase">Reset Scores</button>
+                    </div>
                 </div>
                 <div id="canvas-container">
                     <canvas id="digiBoard" width="800" height="450"></canvas>
@@ -72,7 +75,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA3_rzoZOWytlyAbYKKe_WuFlD8z2WvbX4",
@@ -122,8 +125,6 @@
             if (!drawing) return;
             const pos = getPos(e);
             const lineRef = ref(db, `digibord/${currentUser.klas}/lines/${currentUser.currentLineId}/points`);
-            // We halen de huidige punten niet op (traag), maar voegen toe aan de array via Firebase (simpelere versie voor demo)
-            // In productie zou je dit bufferen, hier doen we een push naar de array-structuur
             onValue(lineRef, (snap) => {
                 let pts = snap.val() || [];
                 pts.push(pos);
@@ -135,14 +136,30 @@
 
         window.clearBoard = () => remove(ref(db, `digibord/${currentUser.klas}`));
 
-        // Luisteren naar wijzigingen op het bord
+        // NIEUWE FUNCTIE: Reset scores voor de hele klas
+        window.resetScores = () => {
+            if(confirm(`Weet je zeker dat je alle scores van ${currentUser.klas} wilt resetten?`)) {
+                const leaderboardRef = ref(db, `leaderboard/${currentUser.klas}`);
+                onValue(leaderboardRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if(data) {
+                        const updates = {};
+                        Object.keys(data).forEach(name => {
+                            updates[`${name}/score`] = 0;
+                        });
+                        update(leaderboardRef, updates);
+                    }
+                }, { onlyOnce: true });
+                currentUser.score = 0;
+            }
+        };
+
         function syncBoard(klas) {
             onValue(ref(db, `digibord/${klas}`), (snapshot) => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 const data = snapshot.val();
                 if (!data) return;
 
-                // Teken lijnen
                 if (data.lines) {
                     Object.values(data.lines).forEach(line => {
                         ctx.beginPath();
@@ -155,7 +172,6 @@
                         ctx.stroke();
                     });
                 }
-                // Teken teksten
                 if (data.texts) {
                     ctx.font = "bold 18px Segoe UI";
                     ctx.fillStyle = "#003366";
@@ -164,7 +180,6 @@
             });
         }
 
-        // --- STANDAARD TRAINING LOGICA (Zinnen, Leaderboard etc.) ---
         const questions = [
             { p: "Door mij werd gezien dat de auto wegreed.", v: "zag" },
             { p: "Door mij is geroken dat de man naar alcohol stonk.", v: "rook" },
@@ -172,7 +187,6 @@
             { p: "Door mij zijn braaksporen waargenomen.", v: "nam" },
             { p: "Door mij wordt gezien dat hij een wapen trekt.", v: "zag" },
             { p: "Door mij werd gezien dat een wond op het been van het slachtoffer bloedde.", v: "zag" }
-            // ... overige zinnen
         ];
 
         let currentIdx = 0;

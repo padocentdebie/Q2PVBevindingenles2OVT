@@ -9,33 +9,53 @@
         :root { --police-blue: #003366; }
         body { background: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
         .police-card { border-top: 8px solid var(--police-blue); }
-        .logo-img { height: 55px; width: auto; object-fit: contain; }
         textarea { resize: none; }
+        
+        @keyframes rank-pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .rank-up { animation: rank-pop 0.5s ease-out forwards; }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4 gap-6">
 
     <div id="login-screen" class="max-w-md w-full bg-white shadow-2xl rounded-xl p-8 police-card">
-        <h2 class="text-2xl font-black text-[#003366] mb-4 uppercase italic">Aanmelden Training</h2>
-        <input type="text" id="studentName" placeholder="Naam" class="w-full p-3 border-2 mb-3 rounded-lg">
-        <select id="studentClass" class="w-full p-3 border-2 mb-6 rounded-lg">
+        <h2 class="text-2xl font-black text-[#003366] mb-2 uppercase italic">Aanmelden Training</h2>
+        
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+            <p class="text-[11px] font-black uppercase text-blue-700 mb-1">Instructie:</p>
+            <p class="text-xs text-blue-900 leading-relaxed">
+                Schrijf uw waarnemingen <strong>actief</strong> en <strong>filmisch</strong>. 
+                Gebruik altijd de <strong>OVT</strong> (onvoltooid verleden tijd). 
+                Begin elke zin met <span class="italic">"Ik [werkwoord] dat..."</span>.
+            </p>
+        </div>
+
+        <input type="text" id="studentName" placeholder="Naam" class="w-full p-3 border-2 mb-3 rounded-lg outline-none focus:border-blue-900">
+        <select id="studentClass" class="w-full p-3 border-2 mb-6 rounded-lg outline-none focus:border-blue-900">
             <option value="">Kies je klas...</option>
-            <option value="Klas A">Klas A</option>
-            <option value="Klas B">Klas B</option>
-            <option value="Klas C">Klas C</option>
+            <option value="Klas Alpha">Klas Alpha</option>
+            <option value="Klas Bravo">Klas Bravo</option>
+            <option value="Klas Charlie">Klas Charlie</option>
+            <option value="Klas Delta">Klas Delta</option>
+            <option value="Klas Echo">Klas Echo</option>
+            <option value="Klas Foxtrot">Klas Foxtrot</option>
+            <option value="Klas Golf">Klas Golf</option>
+            <option value="Klas Juliett">Klas Juliett</option>
+            <option value="Klas Lima">Klas Lima</option>
+            <option value="Klas Mike">Klas Mike</option>
         </select>
-        <button onclick="startTraining()" class="w-full bg-[#003366] text-white py-4 rounded-lg font-black uppercase tracking-widest">Start Sessie</button>
+        <button onclick="startTraining()" class="w-full bg-[#003366] text-white py-4 rounded-lg font-black uppercase tracking-widest hover:bg-blue-800 transition">Start Sessie</button>
     </div>
 
     <div id="main-container" class="hidden max-w-5xl w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-        
         <div class="md:col-span-2 bg-white shadow-2xl rounded-xl overflow-hidden police-card">
             <div class="bg-[#003366] p-6 text-white flex justify-between items-center">
-                <div class="flex items-center gap-4">
-                    <div>
-                        <h1 class="text-xl font-black italic uppercase leading-none tracking-tighter">PV-Training</h1>
-                        <p id="user-display" class="text-[10px] uppercase tracking-widest text-blue-200 font-bold mt-1"></p>
-                    </div>
+                <div>
+                    <h1 class="text-xl font-black italic uppercase leading-none tracking-tighter">PV-Training: Actief Waarnemen</h1>
+                    <p id="user-display" class="text-[10px] uppercase tracking-widest text-blue-200 font-bold mt-1"></p>
                 </div>
                 <div class="text-right">
                     <span id="counter" class="text-2xl font-black text-yellow-400">1 / 25</span>
@@ -44,25 +64,26 @@
 
             <div class="p-8">
                 <div id="exercise-box">
-                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Passieve constructie:</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Passieve constructie (foutief):</p>
                     <div id="passive-sentence" class="text-lg font-bold text-slate-700 italic border-l-4 border-slate-200 pl-4 py-2 bg-slate-50 mb-6">Laden...</div>
                     
-                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw actieve PV-tekst:</p>
+                    <p class="text-[10px] font-black uppercase text-slate-400 mb-1">Uw filmische PV-tekst (OVT):</p>
                     <textarea id="userInput" rows="3" class="w-full p-4 border-2 border-slate-200 rounded-lg outline-none focus:border-blue-900 text-lg mb-4" placeholder="Ik zag dat..."></textarea>
                     
                     <div id="feedback" class="hidden mb-6 p-4 rounded-lg text-sm font-bold border-l-4"></div>
-                    <button onclick="checkAnswer()" class="w-full bg-[#003366] text-white py-4 rounded-lg font-black uppercase tracking-widest">Vastleggen</button>
+                    <button onclick="checkAnswer()" class="w-full bg-[#003366] text-white py-4 rounded-lg font-black uppercase tracking-widest hover:bg-blue-800 transition">Vastleggen in Dossier</button>
                 </div>
 
                 <div id="final-screen" class="hidden text-center py-10">
                     <h2 class="text-3xl font-black text-blue-900 mb-2">DOSSIER VOLTOOID</h2>
-                    <button onclick="location.reload()" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold uppercase">Opnieuw</button>
+                    <p class="mb-6 text-slate-600">U heeft de actieve schrijftraining succesvol afgerond.</p>
+                    <button onclick="location.reload()" class="bg-[#003366] text-white px-8 py-3 rounded-lg font-bold uppercase">Opnieuw Starten</button>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white shadow-xl rounded-xl p-6 border-t-8 border-yellow-500">
-            <h2 class="text-xl font-black text-[#003366] mb-4 uppercase italic">Leaderboard <span id="board-class"></span></h2>
+        <div class="bg-white shadow-xl rounded-xl p-6 border-t-8 border-yellow-500 h-fit">
+            <h2 class="text-xl font-black text-[#003366] mb-4 uppercase italic">Leaderboard <span id="board-class" class="text-yellow-600"></span></h2>
             <div id="leaderboard-list" class="space-y-3">
                 <p class="text-sm text-slate-500 italic">Score wordt geladen...</p>
             </div>
@@ -71,7 +92,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA3_rzoZOWytlyAbYKKe_WuFlD8z2WvbX4",
@@ -94,22 +115,38 @@
             { p: "Door mij is geroken dat de man naar alcohol stonk.", v: "rook" },
             { p: "Door mij was gehoord dat er werd geschreeuwd.", v: "hoorde" },
             { p: "Door mij zijn braaksporen waargenomen.", v: "nam" },
-            { p: "Door mij wordt gezien dat hij een wapen trekt.", v: "zag" }
-            // Voeg hier de rest van je 25 zinnen toe...
+            { p: "Door mij wordt gezien dat hij een wapen trekt.", v: "zag" },
+            { p: "Door mij werd bemerkt dat de verdachte trilde.", v: "bemerkte" },
+            { p: "Door mij is geconstateerd dat het slot was geforceerd.", v: "constateerde" },
+            { p: "Door mij werd gevoeld dat de motor nog warm was.", v: "voelde" },
+            { p: "Door mij is gezien dat de vrouw de tas wegnam.", v: "zag" },
+            { p: "Door mij werd gehoord dat de ruit sneuvelde.", v: "hoorde" },
+            { p: "Door mij is waargenomen dat de bestuurder niet remde.", v: "nam" },
+            { p: "Door mij werd geroken dat er een brandlucht hing.", v: "rook" },
+            { p: "Door mij werd gezien dat een wond op het been van het slachtoffer bloedde.", v: "zag" },
+            { p: "Door mij is gehoord dat de man 'stop' riep.", v: "hoorde" },
+            { p: "Door mij werd waargenomen dat de hond hard blafte.", v: "nam" },
+            { p: "Door mij is gezien dat de verdachte de hoek om rende.", v: "zag" },
+            { p: "Door mij werd bemerkt dat de papieren vals waren.", v: "bemerkte" },
+            { p: "Door mij is gevoeld dat de polslag ontbrak.", v: "voelde" },
+            { p: "Door mij werd gezien dat het licht op rood sprong.", v: "zag" },
+            { p: "Door mij is gehoord dat er drie schoten vielen.", v: "hoorde" },
+            { p: "Door mij werd waargenomen dat de deur openstond.", v: "nam" },
+            { p: "Door mij is geroken dat de verdachte naar wiet rook.", v: "rook" },
+            { p: "Door mij werd gezien dat de auto linksaf sloeg.", v: "zag" },
+            { p: "Door mij is geconstateerd dat de kluis leeg was.", v: "constateerde" },
+            { p: "Door mij werd gehoord dat de sirene naderde.", v: "hoorde" }
         ];
 
         window.startTraining = function() {
             const name = document.getElementById('studentName').value.trim();
             const klas = document.getElementById('studentClass').value;
-            
             if(!name || !klas) return alert("Vul je naam en klas in!");
-            
             currentUser = { name, klas, score: 0 };
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('main-container').classList.remove('hidden');
             document.getElementById('user-display').innerText = `${name} | ${klas}`;
             document.getElementById('board-class').innerText = klas;
-            
             loadLeaderboard(klas);
             showQuestion();
         };
@@ -127,20 +164,29 @@
         }
 
         window.checkAnswer = function() {
-            const input = document.getElementById('userInput').value.toLowerCase();
+            const input = document.getElementById('userInput').value.toLowerCase().trim();
             const q = questions[currentIdx];
             const feedback = document.getElementById('feedback');
+            const tegenwoordigeTijd = ["zie", "hoor", "ruik", "constateer", "neem", "voel", "bemerk"];
+            const gebruiktTT = tegenwoordigeTijd.some(ww => input.includes("ik " + ww));
+
+            if (gebruiktTT) {
+                feedback.innerText = "LET OP: Gebruik de verleden tijd (OVT) om het PV filmisch te maken.";
+                feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-orange-100 text-orange-800 border-l-4 border-orange-500";
+                feedback.classList.remove('hidden');
+                return;
+            }
 
             if(input.startsWith("ik") && input.includes(" dat ") && input.includes(q.v)) {
                 currentUser.score += 10;
                 updateScore();
-                feedback.innerText = "+10 Punten! Goede actieve waarneming.";
+                feedback.innerText = "+10 Punten! Goede actieve en filmische waarneming.";
                 feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-green-100 text-green-800 border-l-4 border-green-500";
                 feedback.classList.remove('hidden');
                 currentIdx++;
-                setTimeout(showQuestion, 1000);
+                setTimeout(showQuestion, 1200);
             } else {
-                feedback.innerText = `FOUT. Gebruik 'Ik ${q.v} dat...'`;
+                feedback.innerText = `FOUT. Gebruik de vorm: 'Ik ${q.v} dat...'`;
                 feedback.className = "mb-6 p-4 rounded-lg text-sm font-bold bg-red-100 text-red-800 border-l-4 border-red-500";
                 feedback.classList.remove('hidden');
             }
@@ -156,17 +202,18 @@
             onValue(boardRef, (snapshot) => {
                 const data = snapshot.val();
                 const list = document.getElementById('leaderboard-list');
+                const oldTopThree = Array.from(list.querySelectorAll('.font-bold')).slice(0, 3).map(el => el.innerText.split('. ')[1]);
                 list.innerHTML = "";
-                
                 if(data) {
                     const sorted = Object.entries(data)
                         .sort(([,a], [,b]) => b.score - a.score)
                         .slice(0, 5);
-                        
                     sorted.forEach(([name, val], index) => {
+                        const isNewInTopThree = index < 3 && name === currentUser.name && !oldTopThree.includes(name);
+                        const rankClass = isNewInTopThree ? 'rank-up border-yellow-400 bg-yellow-50' : '';
                         list.innerHTML += `
-                            <div class="flex justify-between items-center p-2 ${name === currentUser.name ? 'bg-yellow-100 rounded border-l-4 border-yellow-500' : 'border-b'}">
-                                <span class="font-bold">${index + 1}. ${name}</span>
+                            <div class="flex justify-between items-center p-2 ${rankClass} ${name === currentUser.name ? 'bg-yellow-100 rounded border-l-4 border-yellow-500' : 'border-b'}">
+                                <span class="font-bold">${index + 1}. ${name} ${index === 0 ? '🥇' : ''}</span>
                                 <span class="text-[#003366] font-black">${val.score}</span>
                             </div>`;
                     });
